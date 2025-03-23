@@ -1,2 +1,7 @@
 # Env
 .venv
+
+__pycache__
+
+*DrawShapes*
+!*.g4
