@@ -3,6 +3,7 @@ from DrawShapesLexer import DrawShapesLexer
 from DrawShapesParser import DrawShapesParser
 from DrawShapesVisitor import DrawShapesVisitor
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import numpy as np
 
 class ShapeDrawer(DrawShapesVisitor):
@@ -86,6 +87,15 @@ class ShapeDrawer(DrawShapesVisitor):
         self.draw_circle(name, center, radius)
         return None
 
+    def visitRectangleShape(self, ctx):
+        name = ctx.ID().getText()
+        top_left = self.visit(ctx.point())
+        width = int(ctx.INT(0).getText())
+        height = int(ctx.INT(1).getText())
+        print(f"DEBUG - Drawing rectangle {name} with top-left {top_left}, width {width}, height {height}")
+        self.draw_rectangle(name, top_left, width, height)
+        return None
+
     def visitPrintStmt(self, ctx):
         message = ctx.STRING().getText().strip('"')
         print(f"DEBUG - Executing print statement: '{message}'")
@@ -128,5 +138,45 @@ class ShapeDrawer(DrawShapesVisitor):
         plt.xlim(center[0] - radius - 1, center[0] + radius + 1)
         plt.ylim(center[1] - radius - 1, center[1] + radius + 1)
         plt.axis('equal')  # Equal aspect ratio
+        plt.grid(True)
+        plt.show()
+
+    def draw_rectangle(self, name, top_left, width, height):
+        plt.figure()
+        
+        # Create rectangle patch
+        rect = patches.Rectangle(
+            top_left,  # (x,y)
+            width,     # width
+            height,    # height
+            linewidth=1,
+            edgecolor='blue',
+            facecolor='blue',
+            alpha=0.3
+        )
+        
+        # Set up the plot
+        ax = plt.gca()
+        ax.add_patch(rect)
+        
+        # Draw corners
+        corners = [
+            top_left,
+            (top_left[0] + width, top_left[1]),
+            (top_left[0] + width, top_left[1] + height),
+            (top_left[0], top_left[1] + height)
+        ]
+        
+        x_vals, y_vals = zip(*corners)
+        plt.plot(x_vals, y_vals, 'bo-')  # Draw outline with blue dots and lines
+        
+        # Add label
+        plt.text(top_left[0] + width/2, top_left[1] + height/2, name, 
+                 fontsize=12, color="red", fontweight="bold",
+                 horizontalalignment='center', verticalalignment='center')
+        
+        # Set limits and grid
+        plt.xlim(top_left[0] - 1, top_left[0] + width + 1)
+        plt.ylim(top_left[1] - 1, top_left[1] + height + 1)
         plt.grid(True)
         plt.show()

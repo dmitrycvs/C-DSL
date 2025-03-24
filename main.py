@@ -46,17 +46,16 @@ def parse_and_run(input_text):
     visitor = ShapeDrawer()
     visitor.visit(tree)
 
-# Example usage
+# Example usage with all three shapes
 input_text = '''
-shape = "triangle"
+shape = "circle"
 
 if (shape == "triangle") {
-    for i in 3 {
-        triangle A (0,0), (5,0), (3,4) draw
-    }
+    triangle A (0,0), (5,0), (3,4) draw
 } else if (shape == "circle") {
     circle B center (5,5) radius 10 draw
-    triangle C (1,1), (6,1), (3,5) draw
+} else if (shape == "rectangle") {
+    rectangle C top-left (2,2) width 8 height 4 draw
 } else {
     print "Unknown shape type"
 }

@@ -23,11 +23,13 @@ condition: ID '==' STRING;
 
 loop: 'for' ID 'in' INT '{' (statement)* '}';
 
-shape: triangleShape | circleShape;
+shape: triangleShape | circleShape | rectangleShape;
 
 triangleShape: 'triangle' ID point ',' point ',' point 'draw';
 
 circleShape: 'circle' ID 'center' point 'radius' INT 'draw'?;
+
+rectangleShape: 'rectangle' ID 'top' '-' 'left' point 'width' INT 'height' INT 'draw'?;
 
 printStmt: 'print' STRING;
 
