@@ -48,16 +48,17 @@ def parse_and_run(input_text):
 
 # Example usage
 input_text = '''
-shape = "circle"
+shape = "triangle"
 
 if (shape == "triangle") {
     for i in 3 {
         triangle A (0,0), (5,0), (3,4) draw
     }
 } else if (shape == "circle") {
-    print "Shape is circle"
+    circle B center (5,5) radius 10 draw
+    triangle C (1,1), (6,1), (3,5) draw
 } else {
-    print "Not a triangle or circle"
+    print "Unknown shape type"
 }
 '''
 

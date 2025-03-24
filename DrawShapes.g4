@@ -23,8 +23,11 @@ condition: ID '==' STRING;
 
 loop: 'for' ID 'in' INT '{' (statement)* '}';
 
-// Modified to match the format you're using in your input
-shape: 'triangle' ID point ',' point ',' point 'draw';
+shape: triangleShape | circleShape;
+
+triangleShape: 'triangle' ID point ',' point ',' point 'draw';
+
+circleShape: 'circle' ID 'center' point 'radius' INT 'draw'?;
 
 printStmt: 'print' STRING;
 

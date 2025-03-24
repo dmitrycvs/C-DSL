@@ -3,6 +3,7 @@ from DrawShapesLexer import DrawShapesLexer
 from DrawShapesParser import DrawShapesParser
 from DrawShapesVisitor import DrawShapesVisitor
 import matplotlib.pyplot as plt
+import numpy as np
 
 class ShapeDrawer(DrawShapesVisitor):
     def __init__(self):
@@ -67,10 +68,22 @@ class ShapeDrawer(DrawShapesVisitor):
         return None
 
     def visitShape(self, ctx):
+        # This method just delegates to the appropriate shape visitor
+        return self.visitChildren(ctx)
+
+    def visitTriangleShape(self, ctx):
         name = ctx.ID().getText()
         points = [self.visit(point) for point in ctx.point()]
         print(f"DEBUG - Drawing triangle {name} with points {points}")
         self.draw_triangle(name, points)
+        return None
+
+    def visitCircleShape(self, ctx):
+        name = ctx.ID().getText()
+        center = self.visit(ctx.point())
+        radius = int(ctx.INT().getText())
+        print(f"DEBUG - Drawing circle {name} with center {center} and radius {radius}")
+        self.draw_circle(name, center, radius)
         return None
 
     def visitPrintStmt(self, ctx):
@@ -92,5 +105,28 @@ class ShapeDrawer(DrawShapesVisitor):
         plt.text(points[0][0], points[0][1], name, fontsize=12, color="red", fontweight="bold")
         plt.xlim(min(x_vals)-1, max(x_vals)+1)
         plt.ylim(min(y_vals)-1, max(y_vals)+1)
+        plt.grid(True)
+        plt.show()
+
+    def draw_circle(self, name, center, radius):
+        plt.figure()
+        
+        # Create circle
+        circle = plt.Circle(center, radius, fill=True, alpha=0.3, edgecolor='blue', facecolor='blue')
+        
+        # Set up the plot
+        ax = plt.gca()
+        ax.add_patch(circle)
+        
+        # Draw center point
+        ax.plot(center[0], center[1], 'bo')
+        
+        # Add label
+        plt.text(center[0], center[1], name, fontsize=12, color="red", fontweight="bold")
+        
+        # Set limits and grid
+        plt.xlim(center[0] - radius - 1, center[0] + radius + 1)
+        plt.ylim(center[1] - radius - 1, center[1] + radius + 1)
+        plt.axis('equal')  # Equal aspect ratio
         plt.grid(True)
         plt.show()
